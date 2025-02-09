@@ -1,0 +1,39 @@
+  \ifdefined\incluirCapa
+	\input{modelos/capa.tex}
+    \ifdefined\mobile
+      \clearpage
+    \else
+  	  \ifdefined\incluirIndice
+      \else
+        \newline
+      \fi
+    \fi
+  \else
+  \fi
+
+  \ifdefined\incluirIndice
+    \renewcommand\cftaftertoctitle{\par\noindent\hrulefill\par\vskip-0.65em}
+    \tableofcontents
+    \noindent\hrulefill
+    \ifdefined\mobile
+      \thispagestyle{empty}
+      \clearpage
+    \else
+    \fi
+  \else
+  \fi
+
+\frenchspacing
+\markdownSetup{rendererPrototypes={
+  image = {\begin{figure}[hbt!]
+    \centering
+    \includegraphics[max width=\textwidth]{#3}%
+    \ifx\empty#4\empty\else
+    \caption{#4}%
+    \fi
+    \label{fig:#1}%
+    \end{figure}}
+}}
+
+  \markdownInput{artigo.md}
+\end{document}
