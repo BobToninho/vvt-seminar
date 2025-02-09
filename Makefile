@@ -1,4 +1,4 @@
-main.pdf: main.tex modelos/*
+main.pdf: main.tex modelos/* artigo.md | Makefile
 	pdflatex --shell-escape main.tex
 	pdflatex --shell-escape main.tex
 
