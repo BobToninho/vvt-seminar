@@ -1,23 +1,39 @@
 @article{Haydar2013,
-title = {A formal approach for run-time verification of web applications using scope-extended LTL},
-journal = {Information and Software Technology},
-volume = {55},
-number = {12},
-pages = {2191-2208},
-year = {2013},
-issn = {0950-5849},
-doi = {https://doi.org/10.1016/j.infsof.2013.07.013},
-url = {https://www.sciencedirect.com/science/article/pii/S0950584913001596},
-author = {May Haydar and Alexandre Petrenko and Sergiy Boroday and Houari Sahraoui},
-keywords = {Web applications, Web engineering, Model checking, Communicating automata model, Linear Temporal Logic, Dynamic analysis},
-abstract = {Context
-In the past decade, the World Wide Web has been subject to rapid changes. Web sites have evolved from static information pages to dynamic and service-oriented applications that are used for a broad range of activities on a daily basis. For this reason, thorough analysis and verification of Web Applications help assure the deployment of high quality applications.
-Objectives
-In this paper, an approach is presented to the formal verification and validation of existing web applications. The approach consists of using execution traces of a web application to automatically generate a communicating automata model. The obtained model is used to model checking the application against predefined properties, to perform regression testing, and for documentation.
-Methods
-Traces used in the proposed approach are collected by monitoring a web application while it is explored by a user or a program. An automata-based model is derived from the collected traces by mapping the pages of the application under test into states and the links and forms used to browse the application into transitions between the states. Properties, meanwhile, express correctness and quality requirements on web applications and might concern all states of the model; in many cases, these properties concern only a proper subset of the states, in which case the model is refined to designate the subset of the global states of interest. A related problem of property specification in Linear Temporal Logic (LTL) over only a subset of states of a system is solved by means of specialized operators that facilitate specifying properties over propositional scopes in a concise and intuitive way. Each scope constitutes a subset of states that satisfy a propositional logic formula.
-Results
-An implementation of the verification approach that uses the model checker Spin is presented where an integrated toolset is developed and empirical results are shown. Also, Linear Temporal Logic is extended with propositional scopes.
-Conclusion
-a formal approach is developed to build a finite automata model tuned to features of web applications that have to be validated, while delegating the task of property verification to an existing model checker. Also, the problem of property specification in LTL over a subset of the states of a given system is addressed, and a generic and practical solution is proposed which does not require any changes in the system model by defining specialized operators in LTL using scopes.}
+  title = {A formal approach for run-time verification of web applications using scope-extended LTL},
+  journal = {Information and Software Technology},
+  volume = {55},
+  number = {12},
+  pages = {2191-2208},
+  year = {2013},
+  issn = {0950-5849},
+  doi = {https://doi.org/10.1016/j.infsof.2013.07.013},
+  url = {https://www.sciencedirect.com/science/article/pii/S0950584913001596},
+  author = {May Haydar and Alexandre Petrenko and Sergiy Boroday and Houari Sahraoui},
+  keywords = {Web applications, Web engineering, Model checking, Communicating automata model, Linear Temporal Logic, Dynamic analysis},
+  abstract = {Context
+              In the past decade, the World Wide Web has been subject to rapid changes. Web sites have evolved from static information pages to dynamic and service-oriented applications that are used for a broad range of activities on a daily basis. For this reason, thorough analysis and verification of Web Applications help assure the deployment of high quality applications.
+              Objectives
+              In this paper, an approach is presented to the formal verification and validation of existing web applications. The approach consists of using execution traces of a web application to automatically generate a communicating automata model. The obtained model is used to model checking the application against predefined properties, to perform regression testing, and for documentation.
+              Methods
+              Traces used in the proposed approach are collected by monitoring a web application while it is explored by a user or a program. An automata-based model is derived from the collected traces by mapping the pages of the application under test into states and the links and forms used to browse the application into transitions between the states. Properties, meanwhile, express correctness and quality requirements on web applications and might concern all states of the model; in many cases, these properties concern only a proper subset of the states, in which case the model is refined to designate the subset of the global states of interest. A related problem of property specification in Linear Temporal Logic (LTL) over only a subset of states of a system is solved by means of specialized operators that facilitate specifying properties over propositional scopes in a concise and intuitive way. Each scope constitutes a subset of states that satisfy a propositional logic formula.
+              Results
+              An implementation of the verification approach that uses the model checker Spin is presented where an integrated toolset is developed and empirical results are shown. Also, Linear Temporal Logic is extended with propositional scopes.
+              Conclusion
+              a formal approach is developed to build a finite automata model tuned to features of web applications that have to be validated, while delegating the task of property verification to an existing model checker. Also, the problem of property specification in LTL over a subset of the states of a given system is addressed, and a generic and practical solution is proposed which does not require any changes in the system model by defining specialized operators in LTL using scopes.}
+}
+
+
+
+@report{Fielding2022,
+  title = {{HTTP} Semantics},
+  url = {https://datatracker.ietf.org/doc/rfc9110},
+  abstract = {The Hypertext Transfer Protocol ({HTTP}) is a stateless application-level protocol for distributed, collaborative, hypertext information systems. This document describes the overall architecture of {HTTP}, establishes common terminology, and defines aspects of the protocol that are shared by all versions. In this definition are core protocol elements, extensibility mechanisms, and the "http" and "https" Uniform Resource Identifier ({URI}) schemes. This document updates {RFC} 3864 and obsoletes {RFCs} 2818, 7231, 7232, 7233, 7235, 7538, 7615, 7694, and portions of 7230.},
+  number = {{RFC} 9110},
+  institution = {Internet Engineering Task Force},
+  type = {Request for Comments},
+  author = {Fielding, Roy T. and Nottingham, Mark and Reschke, Julian},
+  urldate = {2025-02-16},
+  date = {2022-06},
+  doi = {10.17487/RFC9110},
+  note = {Num Pages: 194},
 }

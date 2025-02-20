@@ -3,5 +3,6 @@ report.pdf: report.tex Makefile
 
 clean:
 	latexmk -c
+	rm -f *.glo *.gls *.glg *.acn *.acr *.alg *.bbl *.ist
 
 .PHONY: clean
