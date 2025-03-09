@@ -1,9 +1,9 @@
 report.pdf: report.tex Makefile
-	latexmk report.tex
+	tectonic --keep-intermediates -Z search-path=$$(dirname $$(kpsewhich biblatex.sty)) $<
 
-presentation/main.pdf: presentation/main.tex | Makefile
-	# https://chatgpt.com/share/67bf7fa3-8c70-8002-8782-4debf6e87f16
-	tectonic -Z search-path=$$(dirname $$(kpsewhich biblatex.sty)) presentation/main.tex
+# https://chatgpt.com/share/67bf7fa3-8c70-8002-8782-4debf6e87f16
+presentation/main.pdf: presentation/main.tex Makefile
+	tectonic --keep-intermediates -Z search-path=$$(dirname $$(kpsewhich biblatex.sty)) $<
 
 clean:
 	latexmk -c
