@@ -28,7 +28,7 @@
 
 \title{Run-time verification of web applications}
 \author{Roberto Tonino}
-\date{2025-03-21}
+\date{May 21st, 2025}
 
 % cool font {{{
 % \usepackage[utf8]{inputenc}
@@ -70,8 +70,8 @@
 \newtheorem*{cor}{Corollary}
 
 \theoremstyle{definition}
-\newtheorem{example}{Example}[section]
-\newtheorem{definition}{Definition}[section]
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
 \newtheorem{procedure}{Procedure}
 
 \theoremstyle{remark}
@@ -117,8 +117,8 @@ Some definitions are now presented, which will help the reader understand the te
       \item $L =$ URLs of the links contained in the response
       \item $V =$\ <$v_1,\dots,v_k$> vector where $v_i$ is the valuation of the page attribute $i$
     \end{itemize}
-  \item \textit{browsing session}: recorded sequence of request-response exchanges that a user performs when visiting a \gls{waut}
-  \item \textit{local browsing session}: recorded sequence of request-response exchanges that a user performs in a single browser window or frame
+  \item \textit{browsing session}: denoted $RRS$, it is a recorded sequence of request-response exchanges that a user performs when visiting a \gls{waut}
+  \item \textit{local browsing session}: denoted $RRS$ as well, it is a recorded sequence of request-response exchanges that a user performs in a single browser window or frame
 \end{itemize}
 
 \section{Automata}
@@ -171,7 +171,7 @@ The model presented in \cref{single-display-applications} is extended to handle 
       \item \tuple{$a$, $t$} $\in I$
       \item \tuple{$f$,$b$} $\in F$
     \end{itemize}
-  \item the requests are now made of the link as before, with the addition of the referer (link from which the request started) and the target (TODO expand with formalisms)
+  \item the requests are now made of the link as before, with the addition of the referer $r$ (link from which the request started) and the target $t$. They are denoted as \reqmulti
 \end{itemize}
 
 The procedure for building a single-display automaton is extended to build a communicating automata model.
@@ -181,12 +181,12 @@ The procedure for building a single-display automaton is extended to build a com
 
   \begin{enumerate}
     \item a browsing session is split into a local browsing session $(RRS_1,\dots,RRS_k)$, one for each window and frame;
-    \item convert each local browsing session into an automaton (TODO add formalisms);
+    \item convert each local browsing session $RRS_i$ into an automaton;
       \begin{enumerate}
-        \item use \cref{browsing-session-to-automaton} to convert a $RRS$ to an automaton;
-        \item the alphabet is extended with the source pages of the frames (src attribute)
-        \item the case in which the user clicks on a link or submits a form while a frame is loading is handled by adding a transition from each state of the local automaton to the response state
-        \item each unexplored link is mapped to a loop in the state it targets (self-loop)
+        \item use \cref{browsing-session-to-automaton} to convert $RRS_i$ to an automaton;
+        \item the alphabet $\Sigma_i$ is extended with the source pages of the frames (src attribute), $\Sigma_i := \Sigma_i\cup\Phi_i$;
+        \item the case in which the user clicks on a link or submits a form while a frame is loading is handled by adding a transition from each state of the local automaton to the response state;
+        \item each unexplored link \reqmulti[i]$\in\Gamma_i$ is mapped to a loop in the state it targets (self-loop);
       \end{enumerate}
     \item create the communicating automata via the \textit{parallel composition operator}, denoted $A_1\mid\mid A_2$. The compositions of multiple automata is denoted $A_1\mid\mid\dots\mid\mid A_k$
   \end{enumerate}
@@ -200,7 +200,7 @@ In the communicating automata model described above, it is possible to character
 
 The authors propose an \textit{extended automata model} by adding a context variable to each state of each automaton. The context variable represents the number of frames that have to be loaded when in a certain state. If the context variable equals 0, the state is denoted stable, i.e. there are no more frames to load. Otherwise, the state is denoted transient.
 
-In \cref{fig:example-communicating-automata} an example of communicating automata is presented. The automata are not in their extended version, but it is possible to denote the transient and stable states already. The transient states are all the states that have an outgoing transition $f_i$, i.e. a transition that represents a frame loaded by the browser without user intevention. The stable states are therefore $(s_0,u_0,w_0)$, $(s_1,u_1,w_1)$, $(s_1,u_2,w_1)$, $(s_2,u_0,w_0)$.
+In \cref{fig:example-communicating-automata} an example of communicating automata is presented. The automaton in part (d) is not in its extended version, but it is possible to denote the transient and stable states already. The transient states are all the states that have an outgoing transition $f_i$, i.e. a transition that represents a frame loaded by the browser without user intevention. The stable states are therefore $(s_0,u_0,w_0)$, $(s_1,u_1,w_1)$, $(s_1,u_2,w_1)$, $(s_2,u_0,w_0)$.
 
 \begin{figure}[h]
   \includegraphics[width=\textwidth]{img/communicating_automata_example.png}
@@ -216,13 +216,15 @@ The definition of an Extended Automaton for single-display applications follows:
 
 \begin{procedure}
   \label{extended-single-automaton}
+  An automaton $A_i$ is extended to an automaton $Q_i$ as follows.
+
   \begin{enumerate}
-    \item the states, alphabet and initial state are unchanged;
-    \item $x_i$ is the context variable, $x_{0i}$ is the context variable's initial state;
-    \item either
+    \item the set of states $S_i$, alphabet $\Sigma_i$ and initial state $s_{0i}$ are unchanged;
+    \item $x_i$ is the context variable of $Q_i$, $x_{0i}$ is the context variable's initial state;
+    \item for each transition $(s,a,s')\in T_i$, $s,s'\in S_i$, $a\in\Sigma_i$:
       \begin{enumerate}
-        \item if the current state has a loop and $x_i$ is in the designated set of transitions (TODO rephrase, not clear), then decrement the value of $x_i$ by 1;
-        \item otherwise set $x_i$ to the number of frames;
+        \item if $s=s'$ and $a\in\Sigma^d_i$, then $(s,a,x_i := x_i - 1,s)$ is a transition in $Q_i$, where $x_i := x_i - 1$ is the update of the transition; or
+        \item $(s,a,x_i := |init(s')\cap \Sigma^d_i|,s')$ is a transition in $Q_i$, where $x_i := |init(s')\cap\Sigma^d_i|$ is the update of the transition.
       \end{enumerate}
   \end{enumerate}
 \end{procedure}
@@ -239,13 +241,13 @@ The definition of a \textit{communicating extended automata} model follows:
   \item the set of designated events $\Sigma^d_i$ is the set of frames of the browsing session;
   \item $x_i$ is initially set to 0;
   \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, or it is decremented;
-  \item each automaton is unfolded; % TODO rephrase, unclear
+  \item each automaton is unfolded (transformed to its equivalent non-extended version);
   \item the unfolded automata are composed using the composition operator.
 \end{enumerate}
 
 The communicating extended automata model built as such is called stable if all its $x_i$ variables are set to 0. Otherwise, it is called transient.
 
-\section{LTL and the In operator}
+\section{LTL and the \textbf{\texttt{In}} operator}
 
 To ease the definition of properties in a setting with automata possessing transient and stable states, the authors introduce new operators to increase the succintness of LTL. The operators allow to specify LTL properties over a subset of the state space offered by the system in consideration. For example, operators can be used to specify properties that hold only on the main page, or only in a subset of the pages of the application.
 
@@ -272,11 +274,24 @@ An example of a simplication allowed by the \textbf{\texttt{In}} operator is the
 
 \subsection{Theoretical evaluation}
 
-The authors propose a theoretical evaluation that assume that all pages are static, i.e. there are no scripts running in them, the \gls{waut} is static, i.e. during the observation it doesn't variate, that there is a one-to-one mapping between an URI and a page, and that always $c = 200$.
+The authors propose a theoretical evaluation that assume that all pages are static, i.e.\ there are no scripts running in them, the \gls{waut} is static, i.e.\ during the observation it doesn't variate, that there is a one-to-one mapping between an URI and a page, and that always $c = 200$.
 
-The definition of a (finite) web app automaton is then given (TODO write it). The authors then present a theorem that states that each trace of a session automaton is also a trace of a web app automaton.
+The definition of a (finite) web app automaton is then given.
 
-After this, a generalization to Kripke structures is made. The definition of a Kripke structure of a web application and of a browsing session are given (TODO write it). Then, a theorem that states that the browsing session Kripke structure is a ``reduced abstraction'' of a web app Kripke structure (TODO write it). This means that if a property is violated in the browsing session Kripke structure, then it is also violated in the web application Kripke structure, for infinite counterexamples. For finite counterexamples, only \textit{safety} properties keep this claim.
+\begin{definition}
+  Given a web application with the set of all the reachable pages \textbf{P}, the (finite) web application automaton, denoted $A_{WA}$, is a tuple \tuple{$S$,$s_0$,$\Sigma$,$T$} where:
+
+  \begin{itemize}
+    \item $S = \textbf{P}\cup\res[0]$ is the set of all pages;
+    \item $s_0\in S$ is the initial page \res[0];
+    \item $\Sigma=\bigcup_{i=1}^n L_i$,$n=|P|$ is the set of all the links in all the pages \textbf{P};
+    \item $T \subseteq S \times\Sigma\times S$ is a set of all triples (\res[i], $l_{i+1}$, \res[i+1]) such that $l_{i+1} = u_{i+1}$, $l_{i+1}\in L_i$.
+  \end{itemize}
+\end{definition}
+
+The authors then present a theorem that states that each trace of a session automaton is also a trace of a web app automaton (cfr. Proposition 1 and Theorem 1 of the paper).
+
+After this, a generalization to Kripke structures is made. The definition of a Kripke structure of a web application and of a browsing session are given (cfr. Definition 7 and Definition 8 of the paper). Then, a theorem that states that the browsing session Kripke structure $M_{RRS}$ is a ``reduced abstraction'' of a web app Kripke structure $M_{WA}$ (cfr. Proposition 2 in the paper). This means that if a property is violated in the browsing session Kripke structure, then it is also violated in the web application Kripke structure, for infinite counterexamples. For finite counterexamples, only \textit{safety} properties keep this claim.
 
 \subsection{Implementation and empirical evaluation}
 
@@ -286,9 +301,21 @@ The exploration was performed on a number of websites chosen by the authors. Par
 
 Many of the defined properties were violated. The authors note how small and large web applications have a lower number of violations, while medium-sized applications have the highest.
 
-(Example of a property + counterexample)
+An example of a specification where the authors found a counterexample is the following.
 
-(Example of a \textit{valid} negation of a property)
+\begin{example}
+  \begin{math}
+    G((montreal\land fire\land underg)\lor((montreal\land fire)\lor((montreal\land underg)\lor((underg\land fire)\lor montreal\lor underg\lor fire))))
+  \end{math}
+\end{example}
+
+The counterexample is shown in \cref{fig:counterexample}.
+
+\begin{figure}[h]
+  \includegraphics[width=\textwidth]{img/counterexample.png}
+  \caption{Counterexample found by the tool.}
+  \label{fig:counterexample}
+\end{figure}
 
 \section{Conclusions}
 
