@@ -144,8 +144,8 @@
 
 % \end{frame}
 
-\section{Let's start from the end}
-\begin{frame}{Let's start from the end}
+\section{Overview}
+\begin{frame}{Overview}
 
   \begin{itemize}
     \item Paper from 2013
@@ -154,18 +154,12 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Let's start from the end}
+\begin{frame}{Overview}
   \includegraphics[width=\textwidth]{../img/screenshot_tool.png}
 \end{frame}
 
 \section{How?}
 \begin{frame}{How?}
-
-%   \begin{enumerate}
-%     \item Communicating automata model
-%     \item LTL with a new operator
-%     \item Spin
-%   \end{enumerate}
   \includegraphics[width=\textwidth]{../img/general_architecture.png}
 \end{frame}
 
@@ -186,36 +180,35 @@
 
 \begin{frame}{Some definitions first}
   \begin{itemize}
-    \item \textit{browsing session}: recorded sequence of request-response exchanges that a user performs when visiting a \gls{waut}
-    \item \textit{local browsing session}: recorded sequence of request-response exchanges that a user performs in a single browser window or frame
+    \item \textit{browsing session}: denoted $RRS$, it is a recorded sequence of request-response exchanges that a user performs when visiting a \gls{waut}
+    \item \textit{local browsing session}: denoted $RRS$ as well, it is a recorded sequence of request-response exchanges that a user performs in a single browser window or frame
   \end{itemize}
 \end{frame}
-
 
 \framecard{Communicating automata model}
 
 \section{Single-display automaton}
 \begin{frame}[t,allowframebreaks]{Single-display automaton}
-  % \begin{procedure}
-  %   \label{browsing-session-to-automaton}
-  %   Convert a browsing session of a single-display application into an automaton.
+  Convert a browsing session of a single-display application into an automaton.
 
-    \begin{enumerate}
-      \item the inactive state $s_0 = \res[0]$ is defined;
-      \item the set of states is defined by the set of \emph{responses}, a response being \res[i]
-        % \begin{enumerate}
-        %   \item when only the links in two responses are different, the responses are mapped to the same state. The authors provide a proof that this compression does not alter the recorded behaviour of the \gls{waut};
-        % \end{enumerate}
-      \item the alphabet is built from the union of the requests ($Req$), the URIs associated with links in the observed responses ($\Gamma$), and the actions that correspond to the unexplored forms in the observed responses $\Delta$. $\Sigma=Req\cup\Gamma\cup\Delta$;
-      \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a link or a form action that goes the page represented by $s_i$ to the page represented by $s_{i+1}$;
-      \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
-      \item for each unexplored link $l \in L_i$ or form $a \in I_i$, the automaton has a transition from the state representing the page \res[i] to a so-called \textit{trap} state $t \in T$.
-    \end{enumerate}
-  % \end{procedure}
+  \begin{enumerate}
+    \item the inactive state $s_0 = \res[0]$ is defined;
+    \item the set of states is defined by the set of \emph{responses}, a response being \res[i]
+      % \begin{enumerate}
+      %   \item when only the links in two responses are different, the responses are mapped to the same state. The authors provide a proof that this compression does not alter the recorded behaviour of the \gls{waut};
+      % \end{enumerate}
+    \item the alphabet is built from the union of the requests ($Req$), the URIs associated with links in the observed responses ($\Gamma$), and the actions that correspond to the unexplored forms in the observed responses $\Delta$. $\Sigma=Req\cup\Gamma\cup\Delta$;
+    \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a \textbf{link} or a \textbf{form action} that goes from the page represented by $s_i$ to the page represented by $s_{i+1}$;
+    \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
+    \item for each unexplored link $l \in L_i$ or form $a \in I_i$, the automaton has a transition from the state representing the page \res[i] to a so-called \textit{trap} state $t \in T$.
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}{Deduced links}
-  From the construction of a single-display automaton, it is possible to derive \textbf{deduced} links
+  \begin{itemize}
+    \item from the construction of a single-display automaton, it is possible to derive \textbf{deduced} links
+    \item i.e.\ links that are not visited during the browsing session, but present in at least one of the responses
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Example of single-display automaton}
@@ -232,7 +225,7 @@
         \item \tuple{$a$, $t$} $\in I$
         \item \tuple{$f$,$b$} $\in F$
       \end{itemize}
-    \item the requests are now made of the link as before, with the addition of the referer (link from which the request started) and the target (TODO expand with formalisms)
+    \item the requests are now made of the link as before, with the addition of the referer $r$ (link from which the request started) and the target $t$. They are denoted as \reqmulti
   \end{itemize}
 \end{frame}
 
@@ -241,12 +234,12 @@
 
   \begin{enumerate}
     \item a browsing session is split into a local browsing session $(RRS_1,\dots,RRS_k)$, one for each window and frame;
-    \item convert each local browsing session into an automaton (TODO add formalisms);
+    \item convert each local browsing session into an automaton;
       \begin{enumerate}
         \item convert a $RRS$ to a single-display automaton;
-        \item the alphabet is extended with the source pages of the frames (src attribute)
-        \item the case in which the user clicks on a link or submits a form while a frame is loading is handled by adding a transition from each state of the local automaton to the response state
-        \item each unexplored link is mapped to a loop in the state it targets (self-loop)
+        \item the alphabet $\Sigma_i$ is extended with the source pages of the frames (src attribute), $\Sigma_i := \Sigma_i\cup\Phi_i$;
+        \item the case in which the user clicks on a link or submits a form while a frame is loading is handled by adding a transition from each state of the local automaton to the response state;
+        \item each unexplored link \reqmulti[i]$\in\Gamma_i$ is mapped to a loop in the state it targets (self-loop);
       \end{enumerate}
     \item create the communicating automata via the \textit{parallel composition operator}, denoted $A_1\mid\mid A_2$. The compositions of multiple automata is denoted $A_1\mid\mid\dots\mid\mid A_k$
   \end{enumerate}
@@ -254,7 +247,7 @@
 
 \begin{frame}{Extending the automata model}
   \begin{itemize}
-    \item there's the need to characterize states of the automata
+    \item there is the need to characterize states of the automata
     \item because the browser automatically triggers frame requests upon loading the page that contains them
     \item extension happens via addition of a \textit{context variable}
   \end{itemize}
@@ -265,12 +258,13 @@
   \framesubtitle{Single-display automaton}
 
   \begin{enumerate}
-    \item the states, alphabet and initial state are unchanged;
-    \item $x_i$ is the context variable, $x_{0i}$ is the context variable's initial state;
-    \item either
+    \item the set of states $S_i$, alphabet $\Sigma_i$ and initial state $s_{0i}$ are unchanged;
+    \item $x_i$ is the context variable of $Q_i$, $x_{0i}$ is the context variable's initial state;
+    \item for each transition $(s,a,s')\in T_i$, $s,s'\in S_i$, $a\in\Sigma_i$:
       \begin{enumerate}
-        \item if the current state has a loop and $x_i$ is in the designated set of transitions (TODO rephrase, not clear), then decrement the value of $x_i$ by 1;
-        \item otherwise set $x_i$ to the number of frames;
+        \item if $s=s'$ and $a\in\Sigma^d_i$, then $(s,a,x_i := x_i - 1,s)$ is a transition in $Q_i$, where $x_i := x_i - 1$ is the update of the transition; or
+        \item $(s,a,x_i := |init(s')\cap \Sigma^d_i|,s')$ is a transition in $Q_i$, where $x_i := |init(s')\cap\Sigma^d_i|$ is the update of the transition.
+        \item ($\Sigma^d_i$ is the set of those transitions who cause the automaton to pass through a transient state, called ``designated set of transitions'')
       \end{enumerate}
   \end{enumerate}
 \end{frame}
@@ -282,11 +276,11 @@
 
   \begin{enumerate}
     \item build the single-display automata;
-    \item apply \cref{extended-single-automaton} to get extended automata;
-    \item the set of designated events $\Sigma^d_i$ is the set of frames of the browsing session;
+    \item extend each automaton;
+    \item the set of designated events $\Sigma^d_i$ is the \textbf{set of frames of the browsing session};
     \item $x_i$ is initially set to 0;
-    \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, or it is decremented;
-    \item each automaton is unfolded; % TODO rephrase, unclear
+    \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, otherwise it is decremented; (TODO rephrase, unclear)
+    \item each automaton is unfolded (transformed to its equivalent non-extended version);
     \item the unfolded automata are composed using the composition operator.
   \end{enumerate}
 \end{frame}
@@ -296,10 +290,7 @@
 \begin{frame}{Property specification}
   \begin{itemize}
     \item LTL is used
-    \item authors introduce 2 new operators
-      \begin{itemize}
-        \item which allow to specify properties over a subset of the state space
-      \end{itemize}
+    \item authors introduce 2 new operators that allow to specify properties over a subset of the state
     \item $\mathcal{\Im}$-scope operator over \textbf{propositional logic expressions}
     \item \textbf{\texttt{In}} operator over \textbf{logical formulas}
   \end{itemize}
@@ -323,13 +314,91 @@
   \end{example}
 \end{frame}
 
+\section{Implementation and empirical evaluation}
+\framecard{Implementation and empirical evaluation}
+
+\begin{frame}{Implementation and empirical evaluation}
+  \begin{itemize}
+    \item the tool can
+      \begin{itemize}
+        \item record a browsing session
+        \item build an internal representation of the session
+        \item evaluate a set of properties against the internal representation
+        \item visualize the communicating automata
+      \end{itemize}
+    \item the set of properties are categorized as
+      \begin{itemize}
+        \item non-functional/general
+        \item functional/specific
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Properties}
+  \begin{itemize}
+    \item Non-functional:
+      \begin{enumerate}
+        \item Broken links and deadlocks are absent.
+        \item Number of links in each display (single or multi) should not exceed a certain threshold (depends on size of application).
+        \item Number of images in each display (single or multi) should not exceed a certain threshold (depends on size of application).
+        \item Number of links in each display (single or multi) is balanced.
+        \item Combinations of certain words/objects are absent.
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Properties}
+  \begin{itemize}
+    \item Functional 
+      \begin{enumerate}
+        \item Home page is reachable from every other page.
+        \item Page X is reachable from page Y without going through a cer- tain page Z.
+        \item Secure pages are not reachable without authentication process.
+        \item In e-commerce applications, promotions of certain products are only present either on the Home page or on Shopping pages and, for each page, the number of promotions does not exceed two.
+        \item Privacy policy page in e-commerce applications is reachable from every page.
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+  \begin{itemize}
+    \item most of the properties were violated
+    \item small and large \gls{waut} have \textbf{less} violation compared to medium-sized ones
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Counterexample}
+  An example of a specification where the authors found a counterexample:
+
+  \begin{example}
+    \begin{math}
+      G((montreal\land fire\land underg)\lor((montreal\land fire)\lor((montreal\land underg)\lor((underg\land fire)\lor montreal\lor underg\lor fire))))
+    \end{math}
+  \end{example}
+\end{frame}
+
+\begin{frame}{Counterexample}
+  \includegraphics[width=\textwidth]{../img/counterexample.png}
+\end{frame}
+
+\section{Conclusions}
+\framecard{Conclusions}
+
+\begin{frame}{Conclusions}
+  \begin{itemize}
+    \item using multiple frames is not common practice in web app development
+    \item nowadays applications are client-side rendered (via JavaScript) starting from JSON instead of HTML 
+    \item the approach presented might be more useful for websites, which use more of a mixed approach compared to web applications
+  \end{itemize}
+\end{frame}
+
+\section{Bibliography}
 \framecard{Bibliography}
 
 \begin{frame}[t,allowframebreaks]{Bibliography}
-  % \nocite{*} % will display the non-cited publications as well. Useful for a publication list.
+  \nocite{*} % will display the non-cited publications as well. Useful for a publication list.
   \printbibliography
 \end{frame}
-
 
 \end{document}
 

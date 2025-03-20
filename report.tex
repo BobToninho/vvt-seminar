@@ -144,7 +144,7 @@ The automaton that represents a single-display application is built as follows.
         \item when only the links in two responses are different, the responses are mapped to the same state. The authors provide a proof that this compression does not alter the recorded behaviour of the \gls{waut};
       \end{enumerate}
     \item the alphabet is built from the union of the requests ($Req$), the URIs associated with links in the observed responses ($\Gamma$), and the actions that correspond to the unexplored forms in the observed responses $\Delta$. $\Sigma=Req\cup\Gamma\cup\Delta$;
-    \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a link or a form action that goes the page represented by $s_i$ to the page represented by $s_{i+1}$;
+    \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a link or a form action that goes from the page represented by $s_i$ to the page represented by $s_{i+1}$;
     \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
     \item for each unexplored link $l \in L_i$ or form $a \in I_i$, the automaton has a transition from the state representing the page \res[i] to a so-called \textit{trap} state $t \in T$.
   \end{enumerate}
@@ -240,7 +240,7 @@ The definition of a \textit{communicating extended automata} model follows:
   \item apply \cref{extended-single-automaton} to get extended automata;
   \item the set of designated events $\Sigma^d_i$ is the set of frames of the browsing session;
   \item $x_i$ is initially set to 0;
-  \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, or it is decremented;
+  \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, otherwise it is decremented; (TODO rephrase, unclear)
   \item each automaton is unfolded (transformed to its equivalent non-extended version);
   \item the unfolded automata are composed using the composition operator.
 \end{enumerate}
@@ -299,6 +299,27 @@ The authors built a tool that can record a browsing session, build an internal r
 
 The exploration was performed on a number of websites chosen by the authors. Part of the websites were explored manually (by a human), and part by a crawler. The crawler performed a \emph{complete} exploration: all the pages of the web app were explored.
 
+The properties are listed in the following:
+
+\begin{itemize}
+  \item Non-functional:
+    \begin{enumerate}
+      \item Broken links and deadlocks are absent.
+      \item Number of links in each display (single or multi) should not exceed a certain threshold (depends on size of application).
+      \item Number of images in each display (single or multi) should not exceed a certain threshold (depends on size of application).
+      \item Number of links in each display (single or multi) is balanced.
+      \item Combinations of certain words/objects are absent.
+    \end{enumerate}
+  \item Functional
+    \begin{enumerate}
+      \item Home page is reachable from every other page.
+      \item Page X is reachable from page Y without going through a cer- tain page Z.
+      \item Secure pages are not reachable without authentication process.
+      \item In e-commerce applications, promotions of certain products are only present either on the Home page or on Shopping pages and, for each page, the number of promotions does not exceed two.
+      \item Privacy policy page in e-commerce applications is reachable from every page.
+    \end{enumerate}
+\end{itemize}
+
 Many of the defined properties were violated. The authors note how small and large web applications have a lower number of violations, while medium-sized applications have the highest.
 
 An example of a specification where the authors found a counterexample is the following.
@@ -323,7 +344,7 @@ It is important to notice how the rapid change of web development impacts the re
 
 Nowadays, web applications are typically \textit{\glspl{spa}}. \glspl{spa} make heavy use of JavaScript code on the frontend. For instance, routing is not happening via the browser, but by custom JavaScript modules called front-end routers.  The result is that the HTML of a web page is changed by JavaScript and not sent by the server, which instead sends data in JSON format. While posing advantages and disadvantages, this has now become the standard practice for non-trivial web applications.
 
-When talking about websites, the situation is different. Requiring less dynamic content by their nature, websites nowadays use either the SPA approach like web applications, the more traditional server-rendered approach, or a mix of the two: server rendering a page at its first load, and then performing \emph{hydration} on it to transform it into an SPA. Additionally, a fourth approach is statically generating websites via \glspl{ssg} (examples being Jenkins\cite{JenkinsWeb}, Hugo\cite{HugoWeb}, Astro\cite{AstroWeb}). \glspl{ssg} take as input plaintext files in formats like Markdown and, via a compilation step, output a set of HTML files that will form the website. This happens \emph{once}, at development time, and not when a web page is requested.
+When talking about websites, the situation is different. Requiring less dynamic content by their nature, websites nowadays use either the SPA approach like web applications, the more traditional server-rendered approach, or a mix of the two: server rendering a page at its first load, and then performing \emph{hydration} on it to transform it into an SPA. Additionally, a fourth approach is statically generating websites via \glspl{ssg} (examples being Jekyll\cite{JekyllWeb}, Hugo\cite{HugoWeb}, Astro\cite{AstroWeb}). \glspl{ssg} take as input plaintext files in formats like Markdown and, via a compilation step, output a set of HTML files that will form the website. This happens \emph{once}, at development time, and not when a web page is requested.
 
 The approach presented in the paper is suitable to be used in static, statically generated websites and server-rendered websites, but not in \acrlong{spa}s and \gls{spa}-like websites.
 
