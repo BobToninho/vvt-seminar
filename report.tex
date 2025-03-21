@@ -240,7 +240,7 @@ The definition of a \textit{communicating extended automata} model follows:
   \item apply \cref{extended-single-automaton} to get extended automata;
   \item the set of designated events $\Sigma^d_i$ is the set of frames of the browsing session;
   \item $x_i$ is initially set to 0;
-  \item at each state, $x_i$ is assigned the number of frames that have to be loaded by the browser, otherwise it is decremented; (TODO rephrase, unclear)
+  \item at each state $s_i$, $x_i$ is the number of browser triggered events enabled in $s_i$;
   \item each automaton is unfolded (transformed to its equivalent non-extended version);
   \item the unfolded automata are composed using the composition operator.
 \end{enumerate}
