@@ -188,7 +188,7 @@
 \framecard{Communicating automata model}
 
 \section{Single-display automaton}
-\begin{frame}[t,allowframebreaks]{Single-display automaton}
+\begin{frame}{Single-display automaton}
   Convert a browsing session of a single-display application into an automaton.
 
   \begin{enumerate}
@@ -199,7 +199,7 @@
       % \end{enumerate}
     \item the alphabet is built from the union of the requests ($Req$), the URIs associated with links in the observed responses ($\Gamma$), and the actions that correspond to the unexplored forms in the observed responses $\Delta$. $\Sigma=Req\cup\Gamma\cup\Delta$;
     \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a \textbf{link} or a \textbf{form action} that goes from the page represented by $s_i$ to the page represented by $s_{i+1}$;
-    \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
+    % \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
     \item for each unexplored link $l \in L_i$ or form $a \in I_i$, the automaton has a transition from the state representing the page \res[i] to a so-called \textit{trap} state $t \in T$.
   \end{enumerate}
 \end{frame}
@@ -215,17 +215,17 @@
   \includegraphics[width=\textwidth]{../img/session_automaton_example.png}
 \end{frame}
 
-\section{Multi-display automaton}
-\begin{frame}{Multi-display automaton}
+\section{Multi-display application}
+\begin{frame}{Multi-display application}
   From single-display to multi-display:
   \begin{itemize}
     \item \textit{response:} \resmulti with $F$ being a set of frames in the page. The target $t$ is defined; if no target is present $t = \varepsilon$. Additional changes are:
       \begin{itemize}
-        \item \tuple{$i$, $t$} $\in L$
+        \item \tuple{$l$, $t$} $\in L$
         \item \tuple{$a$, $t$} $\in I$
         \item \tuple{$f$,$b$} $\in F$
       \end{itemize}
-    \item the requests are now made of the link as before, with the addition of the referer $r$ (link from which the request started) and the target $t$. They are denoted as \reqmulti
+    \item the \textit{requests} are now made of the link as before, with the addition of the referer $r$ (link from which the request started) and the target $t$. They are denoted as \reqmulti
   \end{itemize}
 \end{frame}
 
@@ -250,12 +250,14 @@
     \item there is the need to characterize states of the automata
     \item because the browser automatically triggers frame requests upon loading the page that contains them
     \item extension happens via addition of a \textit{context variable}
+    \item \textit{transient} and \textit{stable} states
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Extending the automata model}
   \framesubtitle{Single-display automaton}
+  We build the Extended Automaton $Q_i$. $\Sigma^d_i$ is the set of those transitions who cause the automaton to pass through a transient state, called ``designated set of transitions''.
 
   \begin{enumerate}
     \item the set of states $S_i$, alphabet $\Sigma_i$ and initial state $s_{0i}$ are unchanged;
@@ -264,7 +266,6 @@
       \begin{enumerate}
         \item if $s=s'$ and $a\in\Sigma^d_i$, then $(s,a,x_i := x_i - 1,s)$ is a transition in $Q_i$, where $x_i := x_i - 1$ is the update of the transition; or
         \item $(s,a,x_i := |init(s')\cap \Sigma^d_i|,s')$ is a transition in $Q_i$, where $x_i := |init(s')\cap\Sigma^d_i|$ is the update of the transition.
-        \item ($\Sigma^d_i$ is the set of those transitions who cause the automaton to pass through a transient state, called ``designated set of transitions'')
       \end{enumerate}
   \end{enumerate}
 \end{frame}
@@ -277,7 +278,7 @@
   \begin{enumerate}
     \item build the single-display automata;
     \item extend each automaton;
-    \item the set of designated events $\Sigma^d_i$ is the \textbf{set of frames of the browsing session};
+    \item the set of designated transitions $\Sigma^d_i$ is the \textbf{set of frames of the browsing session};
     \item $x_i$ is initially set to 0;
     \item at each state $s_i$, $x_i$ is the number of browser triggered events enabled in $s_i$;
     \item each automaton is unfolded (transformed to its equivalent non-extended version);
@@ -363,18 +364,18 @@
 \begin{frame}{Results}
   \begin{itemize}
     \item most of the properties were violated
-    \item small and large \gls{waut} have \textbf{less} violation compared to medium-sized ones
+    \item small and large \gls{waut} have \textbf{less} violations compared to medium-sized ones
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Counterexample}
   An example of a specification where the authors found a counterexample:
 
-  \begin{example}
+  \begin{exampleblock}{``Combination of certain words are absent''}
     \begin{math}
       G((montreal\land fire\land underg)\lor((montreal\land fire)\lor((montreal\land underg)\lor((underg\land fire)\lor montreal\lor underg\lor fire))))
     \end{math}
-  \end{example}
+  \end{exampleblock}
 \end{frame}
 
 \begin{frame}{Counterexample}

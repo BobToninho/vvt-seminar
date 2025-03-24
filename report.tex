@@ -145,7 +145,7 @@ The automaton that represents a single-display application is built as follows.
       \end{enumerate}
     \item the alphabet is built from the union of the requests ($Req$), the URIs associated with links in the observed responses ($\Gamma$), and the actions that correspond to the unexplored forms in the observed responses $\Delta$. $\Sigma=Req\cup\Gamma\cup\Delta$;
     \item there is a transition $(s_i,l_{i+1},s_{i+1})$ from state $s_i$ to state $s_{i+1}$ if there is a link or a form action that goes from the page represented by $s_i$ to the page represented by $s_{i+1}$;
-    \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
+    % \item requests corresponding to explored forms or links define a transition that goes from the state where the request occurs to the state mapped to the response;
     \item for each unexplored link $l \in L_i$ or form $a \in I_i$, the automaton has a transition from the state representing the page \res[i] to a so-called \textit{trap} state $t \in T$.
   \end{enumerate}
 \end{procedure}
@@ -167,7 +167,7 @@ The model presented in \cref{single-display-applications} is extended to handle 
 \begin{itemize}
   \item \textit{response:} \resmulti with $F$ being a set of frames in the page. The target $t$ is defined; if no target is present $t = \varepsilon$. Additional changes are:
     \begin{itemize}
-      \item \tuple{$i$, $t$} $\in L$
+      \item \tuple{$l$, $t$} $\in L$
       \item \tuple{$a$, $t$} $\in I$
       \item \tuple{$f$,$b$} $\in F$
     \end{itemize}
@@ -238,7 +238,7 @@ The definition of a \textit{communicating extended automata} model follows:
 \begin{enumerate}
   \item build the single-display automata;
   \item apply \cref{extended-single-automaton} to get extended automata;
-  \item the set of designated events $\Sigma^d_i$ is the set of frames of the browsing session;
+  \item the set of designated transitions $\Sigma^d_i$ is the set of frames of the browsing session;
   \item $x_i$ is initially set to 0;
   \item at each state $s_i$, $x_i$ is the number of browser triggered events enabled in $s_i$;
   \item each automaton is unfolded (transformed to its equivalent non-extended version);
